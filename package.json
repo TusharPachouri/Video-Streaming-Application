@@ -13,6 +13,7 @@
   "author": "Tushar Pachouri",
   "license": "ISC",
   "devDependencies": {
-    "nodemon": "^3.0.3"
+    "nodemon": "^3.0.3",
+    "prettier": "^3.2.5"
   }
 }
