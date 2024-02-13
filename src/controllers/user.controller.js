@@ -158,7 +158,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       throw new ApiError(401, "Invalid refresh token");
     }
 
-    if(incomingRefreshToken !== user.refreshToken) {
+    if (incomingRefreshToken !== user.refreshToken) {
       throw new ApiError(401, "Refresh token is not valid or used");
     }
     const options = {
@@ -171,12 +171,12 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
     res
       .status(200)
-      .cookie("accessToken", accessToken)
-      .cookie("refreshToken", newRefreshToken)
+      .cookie("accessToken", accessToken, options)
+      .cookie("refreshToken", newRefreshToken, options)
       .json(
         new ApiResponse(
           200,
-          {accessToken, newRefreshToken: newRefreshToken},
+          { accessToken, RefreshToken: newRefreshToken },
           "Access token refreshed successfully"
         )
       );
