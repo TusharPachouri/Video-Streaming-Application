@@ -21,5 +21,15 @@ const uploadOnCloudinary = async (localFilePath) => {
     fs.unlinkSync(localFilePath); // remove the locally saved files as the upload operation got failed
   }
 };
+const deleteFromCloudinary = async (url) => {
+  try {
+    const filePublicId = url.split('/').pop().split('.')[0];
+    const response = await cloudinary.uploader.destroy(filePublicId, {});
+    console.log("File deleted successfully");
+    return response;
+  } catch (err) {
+    console.error("Error while deleting the file: ", err);
+  }
+};
 
-export { uploadOnCloudinary };
+export { uploadOnCloudinary, deleteFromCloudinary };

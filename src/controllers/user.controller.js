@@ -1,7 +1,10 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { User } from "../models/user.models.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import {
+  uploadOnCloudinary,
+  deleteFromCloudinary,
+} from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
 
@@ -189,13 +192,13 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 });
 
 const changeCurrentPassword = asyncHandler(async (req, res) => {
-  const { oldPassword, newPassword } = res.body;
+  const { oldPassword, newPassword } = req.body;
   if (!oldPassword && !newPassword) {
     throw new ApiError(400, "Old password is required");
   }
   const user = await User.findById(req.user._id);
 
-  const isPasswordCorrect = await isPasswordCorrect(oldPassword);
+  const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
 
   if (!isPasswordCorrect) {
     throw new ApiError(400, "Invalid old password");
@@ -203,19 +206,19 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
   user.password = newPassword;
   await user.save({ validateBeforeSave: false });
 
-  return res.res
+  return res
     .status(200)
-    .json(ApiResponse(200, "Password changed successfully"));
+    .json(new ApiResponse(200, "Password changed successfully"));
 });
 
 const getCurrentUser = asyncHandler(async (req, res) => {
   return res
     .status(200)
-    .json(ApiResponse(200, req.user, "Current user fetched successfully"));
+    .json(new ApiResponse(200, req.user, "Current user fetched successfully"));
 });
 
 const updateAccountDetails = asyncHandler(async (req, res) => {
-  const { fullName, email } = res.body;
+  const { fullName, email } = req.body;
   if (!fullName && !email) {
     throw new ApiError(400, "Both fields are required!!!");
   }
@@ -223,7 +226,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
   const user = await User.findByIdAndUpdate(
     req.user?._id,
     {
-      set: {
+      $set: {
         fullName,
         email: email, // we can do this also because name is same thats why we could do the above operation as well here
       },
@@ -237,14 +240,18 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 });
 
 const updateUserAvatar = asyncHandler(async (req, res) => {
-  const avatarLocalPath = req.file?.path;
+  const avatarLocalPath = req.files?.avatar[0]?.path;
   if (!avatarLocalPath) {
     throw new ApiError(400, "Avatar file is not found");
   }
+
   const avatar = await uploadOnCloudinary(avatarLocalPath);
-  if (!avatar.uploadOnCloudinary) {
+  if (!avatar.url) {
     throw new ApiError(400, "Error while uploading the avatar");
   }
+  const oldAvatar = req.user?.avatar;
+  // console.log(oldAvatar);
+  // console.log(avatar); //
   const user = await User.findByIdAndUpdate(
     req.user?._id,
     {
@@ -253,17 +260,19 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
       },
     },
     { new: true }
-  ).select("-password")
+  ).select("-password");
+  await deleteFromCloudinary(oldAvatar);
   return res
     .status(200)
     .json(new ApiResponse(200, user, "Avatar Updated Successfully"));
 });
 
 const updateUserCoverImage = asyncHandler(async (req, res) => {
-  const coverImageLocalPath = req.file?.path;
+  const coverImageLocalPath = req.files?.cover[0]?.path;
   if (!coverImageLocalPath) {
     throw new ApiError(400, "Cover Image file is not found");
   }
+  const oldAvatar = req.user?.avatar;
   const coverImage = await uploadOnCloudinary(coverImageLocalPath);
   if (!coverImage.url) {
     throw new ApiError(400, "Error while uploading the cover image");
@@ -276,7 +285,8 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
       },
     },
     { new: true }
-  ).select("-password")
+  ).select("-password");
+  await deleteFromCloudinary(oldAvatar);
   return res
     .status(200)
     .json(new ApiResponse(200, user, "Cover Image Updated Successfully"));
@@ -291,5 +301,5 @@ export {
   getCurrentUser,
   updateAccountDetails,
   updateUserAvatar,
-  updateUserCoverImage
+  updateUserCoverImage,
 };
