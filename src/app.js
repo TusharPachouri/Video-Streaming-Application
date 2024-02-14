@@ -3,9 +3,9 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 
 const app = express();
-app.use("/", (req, res) => {
-  res.json({ message: "hello from my side" });
-});
+// app.use("/", (req, res) => {
+//   res.json({ message: "hello from my side" });
+// });
 app.use(
   cors({
     origin: process.env.CORS_ORIGIN,
