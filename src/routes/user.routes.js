@@ -9,6 +9,8 @@ import {
   changeCurrentPassword,
   updateUserAvatar,
   updateUserCoverImage,
+  getUserChannelProfile,
+  getWatchHistory,
 } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -31,31 +33,27 @@ router.route("/register").post(
 router.route("/login").post(loginUser);
 
 // get current user:
-router.route("/user").post(verifyJWT, getCurrentUser);
+router.route("/user").get(verifyJWT, getCurrentUser);
 
 //update details // secure
 router.route("/update/password").post(verifyJWT, changeCurrentPassword);
-router.route("/update/details").post(verifyJWT, updateAccountDetails); // emails or fullname
-router.route("/update/avatar").post(
+router.route("/update/details").patch(verifyJWT, updateAccountDetails); // emails or fullname
+router
+  .route("/update/avatar")
+  .patch(verifyJWT, upload.single("avatar"), updateUserAvatar);
+router.route("/update/cover").patch(
   upload.fields([
     {
-      name: "avatar",
-      maxCount: 1,
-    },
-  ]),
-  verifyJWT,
-  updateUserAvatar
-);
-router.route("/update/cover").post(
-  upload.fields([
-    {
-      name: "avatar",
+      name: "coverImage",
       maxCount: 1,
     },
   ]),
   verifyJWT,
   updateUserCoverImage
 );
+
+router.route("/channel/:username").get(verifyJWT, getUserChannelProfile);
+router.route("/watch-history").get(verifyJWT, getWatchHistory);
 
 //secured routes
 router.route("/logout").post(verifyJWT, logoutUser);
