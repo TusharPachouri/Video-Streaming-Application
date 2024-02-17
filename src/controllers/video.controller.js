@@ -65,7 +65,7 @@ const updateDetailsVideo = asyncHandler(async (req, res) => {
   if (!title && !description) {
     throw new ApiError(400, "title and description is needed");
   }
-  const thumbnailLocalPath = req.files?.thumbnail[0]?.path;
+  const thumbnailLocalPath = req.file?.path;
 
   if (!thumbnailLocalPath) {
     throw new ApiError(400, "thumbnail is needed");

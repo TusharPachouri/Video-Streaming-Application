@@ -25,19 +25,14 @@ router.route("/publish").post(
   ]),
   publishAVideo
 );
-router.route("/:videoId").get(verifyJWT, getVideoById);
+router.route("/current-video/:videoId").get(verifyJWT, getVideoById);
 
-router.route("/:videoId").patch(
+router.route("/update-details/:videoId").patch(
   verifyJWT,
-  upload.fields([
-    {
-      name: "thumbnail",
-      maxCount: 1,
-    },
-  ]),
+  upload.single("thumbnail"),
   updateDetailsVideo
 );
 
-router.route("/:videoId").patch(verifyJWT, togglePublishStatus);
+router.route("/toggle/publish/:videoId").patch(verifyJWT, togglePublishStatus);
 
 export default router;

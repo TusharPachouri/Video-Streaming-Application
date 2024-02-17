@@ -46,7 +46,7 @@ router.route("/update/details").patch(verifyJWT, updateAccountDetails); // email
 
 router.route("/update/avatar").patch(
   verifyJWT,
-  upload.single("avatar"), 
+  upload.single("avatar"), // using only file in controller
   updateUserAvatar
 );
 
