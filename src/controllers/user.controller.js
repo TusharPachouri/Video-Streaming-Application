@@ -233,6 +233,9 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
     },
     { new: true }
   ).select("-password");
+  if(!user){
+    throw new ApiError(400, "user not found")
+  }
 
   return res
     .status(200)
