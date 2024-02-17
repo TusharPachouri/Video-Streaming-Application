@@ -416,6 +416,20 @@ const getWatchHistory = asyncHandler(async (req, res) => {
     );
 });
 
+const deleteUser = asyncHandler(async (req, res) => {
+  const user = await User.findByIdAndDelete(req.user?._id);
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+  await deleteFromCloudinary(user?.avatar)
+  await deleteFromCloudinary(user?.coverImage)
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user, "User and Its data deleted successfully"));
+})
+
+
 export {
   registerUser,
   loginUser,
@@ -428,4 +442,5 @@ export {
   updateUserCoverImage,
   getUserChannelProfile,
   getWatchHistory,
+  deleteUser
 };

@@ -11,12 +11,14 @@ import {
   updateUserCoverImage,
   getUserChannelProfile,
   getWatchHistory,
+  deleteUser,
 } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
+//Register and login routes:-
 router.route("/register").post(
   upload.fields([
     {
@@ -32,15 +34,22 @@ router.route("/register").post(
 );
 router.route("/login").post(loginUser);
 
+//secured routes :- Using verifyJWT middleware
+
 // get current user:
 router.route("/user").get(verifyJWT, getCurrentUser);
 
 //update details // secure
 router.route("/update/password").post(verifyJWT, changeCurrentPassword);
+
 router.route("/update/details").patch(verifyJWT, updateAccountDetails); // emails or fullname
-router
-  .route("/update/avatar")
-  .patch(verifyJWT, upload.single("avatar"), updateUserAvatar);
+
+router.route("/update/avatar").patch(
+  verifyJWT,
+  upload.single("avatar"), 
+  updateUserAvatar
+);
+
 router.route("/update/cover").patch(
   upload.fields([
     {
@@ -55,8 +64,11 @@ router.route("/update/cover").patch(
 router.route("/channel/:username").get(verifyJWT, getUserChannelProfile);
 router.route("/watch-history").get(verifyJWT, getWatchHistory);
 
-//secured routes
+// logout and refresh token change
 router.route("/logout").post(verifyJWT, logoutUser);
 router.route("/refresh-token").post(verifyJWT, refreshAccessToken);
+
+// delete user : 
+router.route("/delete").delete(verifyJWT, deleteUser);
 
 export default router;
