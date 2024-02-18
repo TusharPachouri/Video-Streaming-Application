@@ -1,6 +1,7 @@
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Like } from "../models/like.models.js";
+import {Video} from "../models/video.models.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 const toggleVideoLike = asyncHandler(async (req, res) => {
@@ -109,7 +110,21 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
 });
 
 const getLikedVideos = asyncHandler(async (req, res) => {
-    
-  });
+  const { userId } = req.params;
+  try {
+    const likes = await Like.find({ likedBy: userId });
+    const videoIds = likes.map((like) => like.video);
+
+    // Retrieve videos based on the extracted video ids
+    // Assuming you have a Video model
+    const likedVideos = await Video.find({ _id: { $in: videoIds } });
+    return res.status(200).json({ success: true, data: likedVideos });
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
+  }
+});
 
 export { toggleVideoLike, toggleCommentLike, toggleTweetLike, getLikedVideos };
