@@ -23,7 +23,7 @@ const uploadOnCloudinary = async (localFilePath) => {
 };
 const deleteFromCloudinary = async (url) => {
   try {
-    const filePublicId = url.split('/').pop().split('.')[0];
+    const filePublicId = url.split("/").pop().split(".")[0];
     const response = await cloudinary.uploader.destroy(filePublicId, {});
     // console.log("File deleted successfully");
     return response;

@@ -5,6 +5,7 @@ import {
   logoutUser,
   refreshAccessToken,
   getCurrentUser,
+  getUserById,
   updateAccountDetails,
   changeCurrentPassword,
   updateUserAvatar,
@@ -38,6 +39,9 @@ router.route("/login").post(loginUser);
 
 // get current user:
 router.route("/user").get(verifyJWT, getCurrentUser);
+
+// get user by id:
+router.route("/user/:userId").get(verifyJWT, getUserById);
 
 //update details // secure
 router.route("/update/password").post(verifyJWT, changeCurrentPassword);
