@@ -15,7 +15,7 @@ const uploadOnCloudinary = async (localFilePath) => {
     });
     // console.log(response)
     // console.log("File uploaded successfully: ", response.url);
-    fs.unlinkSync(localFilePath);
+    fs.unlinkSync(localFilePath); // no need if we are sending file using memory storage
     return response;
   } catch (err) {
     fs.unlinkSync(localFilePath); // remove the locally saved files as the upload operation got failed
