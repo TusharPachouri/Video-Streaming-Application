@@ -34,7 +34,7 @@ const toggleSubscription = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, subscription, "Subscribed successfully"));
 });
 
-const getUserChannelSubscribers = asyncHandler(async (req, res) => {
+const getChannelSubscribers = asyncHandler(async (req, res) => {
   // const userId = req.user?._id;
   const { channelId } = req.params;
   if (!channelId) {
@@ -85,4 +85,4 @@ const getSubscribedChannels = asyncHandler(async (req, res) => {
     );
 });
 
-export { toggleSubscription, getUserChannelSubscribers, getSubscribedChannels };
+export { toggleSubscription, getChannelSubscribers, getSubscribedChannels };
