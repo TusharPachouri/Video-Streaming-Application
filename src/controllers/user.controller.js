@@ -229,7 +229,7 @@ const getUserById = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(new ApiResponse(200, user, "User fetched successfully"));
-})
+});
 
 const updateAccountDetails = asyncHandler(async (req, res) => {
   const { fullName, email } = req.body;
@@ -247,8 +247,8 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
     },
     { new: true }
   ).select("-password");
-  if(!user){
-    throw new ApiError(400, "user not found")
+  if (!user) {
+    throw new ApiError(400, "user not found");
   }
 
   return res
@@ -438,14 +438,13 @@ const deleteUser = asyncHandler(async (req, res) => {
   if (!user) {
     throw new ApiError(404, "User not found");
   }
-  await deleteFromCloudinary(user?.avatar)
-  await deleteFromCloudinary(user?.coverImage)
+  await deleteFromCloudinary(user?.avatar);
+  await deleteFromCloudinary(user?.coverImage);
 
   return res
     .status(200)
     .json(new ApiResponse(200, user, "User and Its data deleted successfully"));
-})
-
+});
 
 export {
   registerUser,
@@ -460,5 +459,5 @@ export {
   updateUserCoverImage,
   getUserChannelProfile,
   getWatchHistory,
-  deleteUser
+  deleteUser,
 };
