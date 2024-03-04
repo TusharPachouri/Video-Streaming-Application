@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-const path = require('path');
+import path from "path";
 
 const app = express();
 app.get("/", (req, res) => {
