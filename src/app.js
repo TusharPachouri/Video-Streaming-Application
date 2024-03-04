@@ -4,8 +4,13 @@ import cookieParser from "cookie-parser";
 
 const app = express();
 app.get("/", (req, res) => {
-  // res.json({ message: "API Working" });
-  res.sendFile("javascriptFrontEnd.html", { root: "./public" });
+  const filePath = "javascriptFrontEnd.html";
+  res.sendFile(filePath, { root: "./public" }, (err) => {
+    if (err) {
+      console.error("Error sending file:", err);
+      res.status(404).send("File not found");
+    }
+  });
 });
 app.use(
   cors({
