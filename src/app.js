@@ -1,11 +1,12 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+const path = require('path');
 
 const app = express();
 app.get("/", (req, res) => {
-  const filePath = "javascriptFrontEnd.html";
-  res.sendFile(filePath, { root: "./public" }, (err) => {
+  const filePath = path.join(__dirname, "javascriptFrontEnd.html");
+  res.sendFile(filePath, (err) => {
     if (err) {
       console.error("Error sending file:", err);
       res.status(404).send("File not found");
