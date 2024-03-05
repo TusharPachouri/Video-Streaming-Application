@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 import { DB_NAME } from "../constants.js";
 
 const connectDB = async () => {
@@ -7,15 +7,16 @@ const connectDB = async () => {
       `${process.env.MONGODB_URI}/${DB_NAME}`
     );
     // console.log(connectionInstance)
-    console.log(`MONGODB Connected!!! DB host: ${connectionInstance.connection.host}`);
+    console.log(
+      `MONGODB Connected!!! DB host: ${connectionInstance.connection.name}`,
+      // connectionInstance.connection
+    );
   } catch (err) {
     console.log(`MongoDB connection Error:`, err);
     process.exit(1);
   }
 };
 export default connectDB;
-
-
 
 // console.log(process.env.MONGODB_URL)
 // mongoose.set("strictQuery", false);

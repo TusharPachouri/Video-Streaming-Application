@@ -2,14 +2,14 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path";
-import { fileURLToPath } from 'url';
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
-app.use(express.static(path.join(__dirname, 'public')));
-app.get('/', async(req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'Home.html'));
+app.use(express.static(path.join(__dirname, "public")));
+app.get("/", async (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "Home.html"));
 });
 app.use(
   cors({
